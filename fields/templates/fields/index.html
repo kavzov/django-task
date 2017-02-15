@@ -5,15 +5,30 @@
     <title>Fill input fields</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script type="text/javascript">
+
+        function clearDbValues() {
+            $.get("clearDB");
+        }
+
+        function disableAddButton(but) {
+            but.attr("disabled", "disabled");
+        }
+
+        function addNewInputField(form, numOfField) {
+            html = '<div><input type="text" name="field_' + numOfField + '"/></div>';
+            form.append(html);
+        }
+
+
         $(document).ready(function() {
-            // clear db on page load
-            $.get("clearDB")
+
             var n_fields = 10;                          // allowed number of inputs
             var form = $(".input_form");                // form with fields
             var add_button = $("#add_field_button");    // add button
             var text_area = $(".output")                // output text area
-            
             var num = 1;                                // initlal text box num
+
+            clearDbValues();                            // clear db on load page
 
             $(add_button).click(function(e){            // on add input button click
                 e.preventDefault();
@@ -23,26 +38,25 @@
                     var id = "input[name=" + name + "]";
                     var value = $(id).val();            // value of input field
 
-                    // dict for send to server
+                    // dict to send
                     var field = {};
                     field[name] = value;
-                    // var fieldData = JSON.stringify(field, null, '\t');
 
                     // send data to script
-                    // $.post("script", fieldData);
                     $.post("script", field);
 
                     num++;
 
                     // if it was last allowed field, disable button "Add field" and stop script
                     if (num == n_fields+1) {
-                        $("#add_field_button").attr("disabled","disabled");
+                        disableAddButton(add_button);
                         return false;
                     }
 
                     // add new input field
-                    var new_field = '<div><input type="text" name="field_' + num + '"/></div>';
-                    $(form).append(new_field);
+                    addNewInputField(form, num);
+                    // var new_field = '<div><input type="text" name="field_' + num + '"/></div>';
+                    // $(form).append(new_field);
                 }
             });
         });
@@ -50,12 +64,22 @@
 </head>
 
 <body>
-
+<pre>
+2) создать форму с динамическим добавлением инпутов не привязаную к какой-либо модели
+(например есть инпут name, при нажатии на кнопку "добавить" будет появляться дополнительный инпут name1 и т.д. )
+3) сохранять данные в модели в поле типа jsonB posgresql (все добавленые инпуты)
+4) Выводить в другом вьюсе данные из сабмиченых форм. (просто json)
+</pre>
+<hr>
+<pre>
+Макс 10 записей. Потом конопка дизактивируется.
+'Output' - страница с json выводом полей.
+</pre>
     <div class="input_form">
-        <button id="add_field_button">Add field</button>
+        <button id="add_field_button" style="margin-bottom:1em;">Add field</button>
         <div><input type="text" name="field_1"></div>
     </div>
-    <div><a href="output">Output</a></div>
+    <pre><a href="output">Output</a></pre>
 
 </body>
 </html>
