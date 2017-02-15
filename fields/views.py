@@ -5,10 +5,6 @@ from fields.models import Field
 import json
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
-
 def fields(request):
 	return render(request, 'fields/index.html')
 
