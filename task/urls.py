@@ -24,6 +24,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^fields/', include('fields.urls')),
+    url(r'^', include('fields.urls')),
     url(r'^admin/', admin.site.urls),
 ]
